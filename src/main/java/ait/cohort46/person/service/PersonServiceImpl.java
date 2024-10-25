@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -88,6 +90,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Iterable<CityPopulationDto> getCitiesPopulation() {
-        return null;
+        return personRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(p -> p.getAddress().getCity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .map(e -> new CityPopulationDto(e.getKey(), e.getValue()))
+                .toList();
     }
 }
