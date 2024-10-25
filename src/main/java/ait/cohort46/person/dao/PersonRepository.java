@@ -18,6 +18,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     Stream<Person> findByBirthDateBetween(LocalDate from, LocalDate to);
 
-    @Query(value = "SELECT city, COUNT(*) AS population FROM persons GROUP BY city ORDER BY population DESC", nativeQuery = true)
+    @Query("select p.address.city, count(p) AS population from Citizen p group by p.address.city order by count(p) desc ")
     List<Object[]> getCityPopulation();
 }
