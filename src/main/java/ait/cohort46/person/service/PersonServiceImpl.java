@@ -6,9 +6,12 @@ import ait.cohort46.person.dto.CityPopulationDto;
 import ait.cohort46.person.dto.PersonDto;
 import ait.cohort46.person.dto.exception.PersonNotFoundException;
 import ait.cohort46.person.model.Address;
+import ait.cohort46.person.model.Child;
+import ait.cohort46.person.model.Employee;
 import ait.cohort46.person.model.Person;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PersonServiceImpl implements PersonService {
+public class PersonServiceImpl implements PersonService, CommandLineRunner {
     private final PersonRepository personRepository;
     private final ModelMapper modelMapper;
 
@@ -91,5 +94,21 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Iterable<CityPopulationDto> getCitiesPopulation() {
         return personRepository.getCityPopulation();
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (personRepository.count() == 0) {
+            Person person = new Person(1000, "John", LocalDate.of(1985, 3, 11),
+                    new Address("Tel Aviv", "Ben Gvirol", 81));
+            Child child = new Child(2000, "Peter", LocalDate.of(2019, 7, 5),
+                    new Address("Ashkelon", "Bar Kohva", 21), "Sun");
+            Employee employee = new Employee(3000, "Mary", LocalDate.of(1995, 11, 23),
+                    new Address("Rehovot", "Herzl", 7), "Motorola", 20_000);
+            personRepository.save(person);
+            personRepository.save(child);
+            personRepository.save(employee);
+        }
+
     }
 }
