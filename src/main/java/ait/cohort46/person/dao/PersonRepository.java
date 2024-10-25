@@ -1,5 +1,6 @@
 package ait.cohort46.person.dao;
 
+import ait.cohort46.person.dto.CityPopulationDto;
 import ait.cohort46.person.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,6 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
 
     Stream<Person> findByBirthDateBetween(LocalDate from, LocalDate to);
 
-    @Query(value = "SELECT city, COUNT(*) AS population FROM persons GROUP BY city ORDER BY population DESC", nativeQuery = true)
-    List<Object[]> getCityPopulation();
+    @Query("select new ait.cohort46.person.dto.CityPopulationDto(p.address.city, count(p)) from Citizen p  group by p.address.city order by count(p) desc")
+    List<CityPopulationDto> getCityPopulation();
 }
