@@ -1,6 +1,8 @@
 package ait.cohort46.person.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.io.Serializable;
@@ -19,6 +21,5 @@ public class Person implements Serializable {
     private String name;
     private LocalDate birthDate;
     @Setter
-//    @Embedded
     private Address address;
 }
