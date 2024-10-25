@@ -90,12 +90,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Iterable<CityPopulationDto> getCitiesPopulation() {
-        return personRepository.findAll()
+        return personRepository.getCityPopulation()
                 .stream()
-                .collect(Collectors.groupingBy(p -> p.getAddress().getCity(), Collectors.counting()))
-                .entrySet()
-                .stream()
-                .map(e -> new CityPopulationDto(e.getKey(), e.getValue()))
+                .map(a -> new CityPopulationDto((String) a[0], (Long) a[1]))
                 .toList();
     }
 }
