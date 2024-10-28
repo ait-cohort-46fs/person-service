@@ -1,8 +1,6 @@
 package ait.cohort46.person.service;
 
-import ait.cohort46.person.dto.AddressDto;
-import ait.cohort46.person.dto.CityPopulationDto;
-import ait.cohort46.person.dto.PersonDto;
+import ait.cohort46.person.dto.*;
 
 public interface PersonService {
 	Boolean addPerson(PersonDto personDto);
@@ -22,4 +20,8 @@ public interface PersonService {
 	PersonDto[] findPersonsBetweenAge(Integer minAge, Integer maxAge);
 	
 	Iterable<CityPopulationDto> getCitiesPopulation();
+
+	EmployeeDto[] findEmployeesBySalary(int min, int max);
+
+	ChildDto[] getChildren();
 }

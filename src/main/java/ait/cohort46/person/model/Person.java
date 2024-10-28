@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = "id")
 @Entity(name = "Citizen")
 @Table(name = "persons")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Person implements Serializable {
     @Id
     private int id;
