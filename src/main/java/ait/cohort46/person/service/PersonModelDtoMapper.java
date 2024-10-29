@@ -1,10 +1,7 @@
 package ait.cohort46.person.service;
 
-import ait.cohort46.person.dto.ChildDto;
-import ait.cohort46.person.dto.EmployeeDto;
 import ait.cohort46.person.dto.PersonDto;
-import ait.cohort46.person.model.Child;
-import ait.cohort46.person.model.Employee;
+import ait.cohort46.person.dto.exception.UnknownPersonTypeException;
 import ait.cohort46.person.model.Person;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,25 +10,31 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PersonModelDtoMapper {
+    private static final String MODEL_PACKAGE = "ait.cohort46.person.model.";
+    private static final String DTO_SUFFIX = "Dto";
+    private static final String DTO_PACKAGE = "ait.cohort46.person.dto.";
     private final ModelMapper modelMapper;
 
     public PersonDto mapToDto(Person person) {
-        if (person instanceof Child) {
-            return modelMapper.map(person, ChildDto.class);
+        String dtoClassName = person.getClass().getSimpleName() + DTO_SUFFIX;
+        try {
+            @SuppressWarnings("unchecked")
+            Class<? extends PersonDto> clazz = (Class<? extends PersonDto>) Class.forName(DTO_PACKAGE + dtoClassName);
+            return modelMapper.map(person, clazz);
+        } catch (ClassNotFoundException e) {
+            throw new UnknownPersonTypeException();
         }
-        if (person instanceof Employee) {
-            return modelMapper.map(person, EmployeeDto.class);
-        }
-        return modelMapper.map(person, PersonDto.class);
     }
 
     public Person mapToModel(PersonDto personDto) {
-        if (personDto instanceof ChildDto) {
-            return modelMapper.map(personDto, Child.class);
+        String modelClassName = personDto.getClass().getSimpleName();
+        modelClassName = modelClassName.substring(0, modelClassName.length() - 3);
+        try {
+            @SuppressWarnings("unchecked")
+            Class<? extends Person> clazz = (Class<? extends Person>) Class.forName(MODEL_PACKAGE + modelClassName);
+            return modelMapper.map(personDto, clazz);
+        } catch (ClassNotFoundException e) {
+            throw new UnknownPersonTypeException();
         }
-        if (personDto instanceof EmployeeDto) {
-            return modelMapper.map(personDto, Employee.class);
-        }
-        return modelMapper.map(personDto, Person.class);
     }
 }
