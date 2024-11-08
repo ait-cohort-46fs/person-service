@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: person-mysqldb
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=cohort46M
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    networks:
+      - person-net
+
+  app:
+    image: eddfish/person-service:0.1.0
+    container_name: person-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - person-net
+    environment:
+      - spring.datasource.username=root
+      - spring.datasource.password=1234
+      - spring.datasource.url=jdbc:mysql://db:3306/cohort46M
+      - spring.jpa.hibernate.ddl-auto=update
+
+networks:
+  person-net:
+    driver: bridge
+volumes:
+  mysql_volume:
+    external: true
